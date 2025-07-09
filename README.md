@@ -47,8 +47,8 @@ A secure, intelligent chatbot system designed to facilitate communication betwee
 
 ### 1. Clone and Install Dependencies
 ```bash
-git clone <repository-url>
-cd SchoolPrincipal
+git clone https://github.com/chethanmp6/schoolprincipal.git
+cd schoolprincipal
 pip install -r requirements.txt
 ```
 
