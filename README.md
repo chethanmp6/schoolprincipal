@@ -56,10 +56,10 @@ pip install -r requirements.txt
 ```bash
 # Create .env file with your configuration
 JWT_SECRET_KEY=your-super-secret-jwt-key-change-this-in-production
-FLASK_ENV=development
-FLASK_DEBUG=True
 DATABASE_URL=sqlite:///data/school.db
 ```
+
+**Note**: FastAPI automatically handles development mode and debug settings through uvicorn, so no additional environment variables are needed for development.
 
 ### 3. Initialize Database and Sample Data
 ```bash
