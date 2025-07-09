@@ -1,6 +1,6 @@
 import sqlite3
 import json
-import bcrypt
+from passlib.context import CryptContext
 import os
 from datetime import datetime
 from typing import Optional, List, Dict, Any
@@ -8,6 +8,7 @@ from typing import Optional, List, Dict, Any
 class Database:
     def __init__(self, db_path: str = 'data/school.db'):
         self.db_path = db_path
+        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
         self.init_database()
     
@@ -194,7 +195,7 @@ class Database:
             conn.close()
             return None
         
-        if bcrypt.checkpw(password.encode('utf-8'), result['password_hash']):
+        if self.pwd_context.verify(password, result['password_hash']):
             cursor.execute(
                 "UPDATE parent_auth SET last_login = CURRENT_TIMESTAMP WHERE parent_email = ?",
                 (email,)
@@ -243,7 +244,7 @@ class Database:
         conn = self.get_connection()
         cursor = conn.cursor()
         
-        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        password_hash = self.pwd_context.hash(password)
         student_ids_str = ','.join(student_ids)
         
         query = """

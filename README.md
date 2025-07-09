@@ -33,11 +33,11 @@ A secure, intelligent chatbot system designed to facilitate communication betwee
 
 ## Technology Stack
 
-- **Backend**: Python Flask
+- **Backend**: Python FastAPI
 - **Database**: SQLite with secure schema design
-- **Authentication**: JWT tokens with Flask-JWT-Extended
+- **Authentication**: JWT tokens with python-jose
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **Security**: bcrypt, Flask-Limiter, CORS protection
+- **Security**: bcrypt via passlib, SlowAPI rate limiting, CORS protection
 
 ## Installation & Setup
 
@@ -68,10 +68,16 @@ python scripts/seed_data.py
 
 ### 4. Run the Application
 ```bash
-python app.py
+python main.py
 ```
 
-The application will be available at `http://localhost:5000`
+The application will be available at `http://localhost:8000`
+
+**FastAPI Features:**
+- **Interactive API Documentation**: Available at `http://localhost:8000/docs`
+- **ReDoc Documentation**: Available at `http://localhost:8000/redoc`
+- **High Performance**: Async support and automatic validation
+- **Type Safety**: Pydantic models for request/response validation
 
 ## Sample Login Credentials
 
@@ -166,9 +172,13 @@ After running the seed script, you can use these credentials:
 ### Project Structure
 ```
 SchoolPrincipal/
-├── app.py                 # Main Flask application
+├── main.py                # Main FastAPI application
 ├── models/
 │   ├── database.py        # Database models and operations
+│   ├── schemas.py         # Pydantic models for validation
+│   └── __init__.py
+├── auth/
+│   ├── auth.py            # Authentication utilities
 │   └── __init__.py
 ├── chatbot/
 │   ├── school_bot.py      # Chatbot logic and NLP
@@ -187,12 +197,18 @@ SchoolPrincipal/
 ### Testing
 ```bash
 # Run the application in development mode
-python app.py
+python main.py
 
 # Test API endpoints
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email": "john.johnson@email.com", "password": "password123"}'
+
+# Access interactive API documentation
+# Open http://localhost:8000/docs in your browser
+
+# Run tests
+pytest
 ```
 
 ## Contributing
