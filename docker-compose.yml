@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  schoolbot:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+    environment:
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - schoolbot-network
+
+  # Optional: Add a database service for production use
+  # postgres:
+  #   image: postgres:15-alpine
+  #   environment:
+  #     POSTGRES_DB: schoolbot
+  #     POSTGRES_USER: schoolbot
+  #     POSTGRES_PASSWORD: schoolbot_password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - schoolbot-network
+
+  # Optional: Add Redis for caching
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - schoolbot-network
+
+networks:
+  schoolbot-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

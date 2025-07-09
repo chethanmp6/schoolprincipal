@@ -41,18 +41,58 @@ A secure, intelligent chatbot system designed to facilitate communication betwee
 
 ## Installation & Setup
 
-### Prerequisites
+### Option 1: Docker (Recommended)
+
+#### Prerequisites
+- Docker and Docker Compose installed
+
+#### Quick Start with Docker
+```bash
+# Clone the repository
+git clone https://github.com/chethanmp6/schoolprincipal.git
+cd schoolprincipal
+
+# Start the application
+docker-compose up -d
+
+# The application will be available at http://localhost:8000
+```
+
+#### Docker Development Helper
+```bash
+# Use the development helper script
+chmod +x scripts/docker-dev.sh
+
+# Build the application
+./scripts/docker-dev.sh build
+
+# Start the application
+./scripts/docker-dev.sh up
+
+# View logs
+./scripts/docker-dev.sh logs
+
+# Stop the application
+./scripts/docker-dev.sh down
+
+# Clean rebuild
+./scripts/docker-dev.sh rebuild
+```
+
+### Option 2: Local Development
+
+#### Prerequisites
 - Python 3.8+
 - pip package manager
 
-### 1. Clone and Install Dependencies
+#### 1. Clone and Install Dependencies
 ```bash
 git clone https://github.com/chethanmp6/schoolprincipal.git
 cd schoolprincipal
 pip install -r requirements.txt
 ```
 
-### 2. Environment Setup
+#### 2. Environment Setup
 ```bash
 # Create .env file with your configuration
 JWT_SECRET_KEY=your-super-secret-jwt-key-change-this-in-production
@@ -61,12 +101,12 @@ DATABASE_URL=sqlite:///data/school.db
 
 **Note**: FastAPI automatically handles development mode and debug settings through uvicorn, so no additional environment variables are needed for development.
 
-### 3. Initialize Database and Sample Data
+#### 3. Initialize Database and Sample Data
 ```bash
 python scripts/seed_data.py
 ```
 
-### 4. Run the Application
+#### 4. Run the Application
 ```bash
 python main.py
 ```
@@ -173,6 +213,11 @@ After running the seed script, you can use these credentials:
 ```
 SchoolPrincipal/
 ├── main.py                # Main FastAPI application
+├── Dockerfile             # Docker image configuration
+├── docker-compose.yml     # Development Docker setup
+├── docker-compose.prod.yml # Production Docker setup
+├── nginx.conf             # Nginx configuration for production
+├── .dockerignore          # Docker ignore file
 ├── models/
 │   ├── database.py        # Database models and operations
 │   ├── schemas.py         # Pydantic models for validation
@@ -187,6 +232,8 @@ SchoolPrincipal/
 │   └── index.html         # Web interface
 ├── scripts/
 │   ├── seed_data.py       # Database seeding
+│   ├── docker-entrypoint.sh # Docker startup script
+│   ├── docker-dev.sh      # Development helper script
 │   └── __init__.py
 ├── data/                  # SQLite database storage
 ├── requirements.txt       # Python dependencies
@@ -195,6 +242,8 @@ SchoolPrincipal/
 ```
 
 ### Testing
+
+#### Local Development
 ```bash
 # Run the application in development mode
 python main.py
@@ -210,6 +259,55 @@ curl -X POST http://localhost:8000/api/auth/login \
 # Run tests
 pytest
 ```
+
+#### Docker Development
+```bash
+# Build and start with Docker
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Run tests in container
+docker-compose exec schoolbot pytest
+
+# Access the application
+# Open http://localhost:8000 in your browser
+```
+
+## Docker Deployment
+
+### Development Environment
+```bash
+# Quick start
+docker-compose up -d
+
+# With rebuild
+docker-compose up -d --build
+
+# Stop services
+docker-compose down
+```
+
+### Production Environment
+```bash
+# Start production services
+docker-compose -f docker-compose.prod.yml up -d
+
+# Includes:
+# - SchoolBot application
+# - PostgreSQL database
+# - Redis cache
+# - Nginx reverse proxy
+```
+
+### Docker Features
+- **Multi-stage build**: Optimized image size
+- **Non-root user**: Enhanced security
+- **Health checks**: Automatic service monitoring
+- **Volume persistence**: Data survives container restarts
+- **Development tools**: Helper scripts for common tasks
+- **Production ready**: Nginx, PostgreSQL, Redis integration
 
 ## Contributing
 
